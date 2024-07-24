@@ -19,6 +19,10 @@ opponent = pygame.Rect(10, screen_height/2 - 70,10, 140)
 bg_color = pygame.Color('grey12')
 light_grey = (200, 200, 200)
 
+# Speed Var
+ball_speed_x = 7
+ball_speed_y = 7
+
 while True:
     # Handling input
     for event in pygame.event.get():
@@ -26,12 +30,22 @@ while True:
             pygame.quit()
             sys.exit()
             
+    # Animationg ball
+    ball.x += ball_speed_x
+    ball.y += ball_speed_y
+    
+    # Making the ball bounce around the border
+    if (ball.top <= 0 or ball.bottom >= screen_height):
+        ball_speed_y *= -1
+    if (ball.left <= 0 or ball.left >= screen_width):
+        ball_speed_x *= -1
+            
     # Visuals
     screen.fill(bg_color)
     pygame.draw.rect(screen, light_grey, player)        
     pygame.draw.rect(screen, light_grey, opponent)
     pygame.draw.ellipse(screen, light_grey, ball) 
-    pygame.draw.aaline(screen, light_grey, (screen_width/2,0), (screen_width/2, screen_height))
+    pygame.draw.aaline(screen, light_grey, (screen_width/2,0), (screen_width/2, screen_height))  # Draws the center ling
 
     
     # Updating the window
