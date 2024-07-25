@@ -1,4 +1,6 @@
-import pygame, sys, random
+import pygame
+import sys
+import random
 
 # General setup
 pygame.init()
@@ -11,7 +13,7 @@ def ball_animations():
     ball.y += ball_speed_y
     
     # Making the ball bounce around the border
-    if (ball.top <= 0 or ball.bottom >= screen_height):
+    if ball.top <= 0 or ball.bottom >= screen_height:
         ball_speed_y *= -1
         
     if ball.left <= 0:

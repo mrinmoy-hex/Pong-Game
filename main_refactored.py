@@ -29,6 +29,14 @@ class Pong:
         self.player_speed = 0
         self.opponent_speed = 7
         
+        # Text variables
+        self.player_score = 0
+        self.opponent_score = 0
+        self.game_font = pygame.font.Font("freesansbold.ttf", 32)
+
+        # Score Timer
+        self.score_time = True
+        
             
     def player_animations(self):
         """Animate the player's paddle and keep it within the screen bounds."""
@@ -53,11 +61,30 @@ class Pong:
         if self.opponent.bottom >= self.screen_height:
             self.opponent.bottom = self.screen_height
             
-    def ball_restart(self):
+    def ball_start(self):
         """Restart the ball in the center with a random direction."""
+        self.current_time = pygame.time.get_ticks()
         self.ball.center = (self.screen_width/2, self.screen_height/2)
-        self.ball_speed_y *= random.choice((1, -1))
-        self.ball_speed_x *= random.choice((1, -1))
+
+        if self.current_time - self.score_time < 700:
+            number_three = self.game_font.render("3", False, self.light_grey)
+            self.screen.blit(number_three, (self.screen_width/2 - 10, self.screen_height/2 + 20))
+
+        if 700 < self.current_time - self.score_time < 1400:
+            number_two = self.game_font.render("2", False, self.light_grey)
+            self.screen.blit(number_two, (self.screen_width/2 - 10, self.screen_height/2 + 20))
+
+        if 1400 < self.current_time - self.score_time < 2100:
+            number_one = self.game_font.render("1", False, self.light_grey)
+            self.screen.blit(number_one, (self.screen_width/2 - 10, self.screen_height/2 + 20))
+
+
+        if self.current_time - self.score_time < 2100:
+            self.ball_speed_x, self.ball_speed_y = 0, 0
+        else:
+            self.ball_speed_y = 7 * random.choice((1, -1))
+            self.ball_speed_x = 7 * random.choice((1, -1))
+            self.score_time = None
         
     def ball_animations(self):
         """Animate the ball and handle collisions."""
@@ -65,11 +92,18 @@ class Pong:
         self.ball.y += self.ball_speed_y
 
         # Making the ball bounce around the border
-        if (self.ball.top <= 0 or self.ball.bottom >= self.screen_height):
+        if self.ball.top <= 0 or self.ball.bottom >= self.screen_height:
             self.ball_speed_y *= -1
-        if (self.ball.left <= 0 or self.ball.left >= self.screen_width):
-            self.ball_restart()
+
+        if self.ball.left <= 0:
+            self.player_score += 1
+            self.score_time = pygame.time.get_ticks()
+
+        if self.ball.left >= self.screen_width:
+            self.opponent_score += 1
+            self.score_time = pygame.time.get_ticks()
             
+        # Colissions
         if self.ball.colliderect(self.player) or self.ball.colliderect(self.opponent):
             self.ball_speed_x *= -1
             
@@ -105,6 +139,15 @@ class Pong:
             pygame.draw.rect(self.screen, self.light_grey, self.opponent)
             pygame.draw.ellipse(self.screen, self.light_grey, self.ball) 
             pygame.draw.aaline(self.screen, self.light_grey, (self.screen_width/2,0), (self.screen_width/2, self.screen_height))  # Draws the center ling
+            
+            if self.score_time:
+                self.ball_start()
+
+            player_text = self.game_font.render(f"{self.player_score}", False, self.light_grey)
+            self.screen.blit(player_text, (660, 470))
+    
+            opponent_text = self.game_font.render(f"{self.opponent_score}", False, self.light_grey)
+            self.screen.blit(opponent_text, (600, 470))
             
             # Updating the window
             pygame.display.flip()
