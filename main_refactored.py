@@ -12,16 +12,16 @@ class Pong:
         self.screen_width = 1280
         self.screen_height = 960
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        pygame.display.set_caption("Pong")
+        pygame.display.set_caption("Pong Game")
 
         # Game Rectangles
-        self.ball = pygame.Rect(self.screen_width/2 - 15, self.screen_height/2 - 15,30, 30)    # placed at the centre of screen
+        self.ball = pygame.Rect(self.screen_width/2 - 15, self.screen_height/2 - 15, 30, 30)    # placed at the centre of screen
         self.player = pygame.Rect(self.screen_width - 20, self.screen_height/2 - 70, 10, 140)
-        self.opponent = pygame.Rect(10, self.screen_height/2 - 70,10, 140)
+        self.opponent = pygame.Rect(10, self.screen_height/2 - 70, 10, 140)
 
         # Game Color
         self.bg_color = pygame.Color('grey12')
-        self.light_grey = (200, 200, 200)
+        self.light_grey = (200, 200, 200)   # RGB color code
 
         # Speed Var
         self.ball_speed_x = 7 * random.choice((1, -1))
@@ -89,7 +89,6 @@ class Pong:
                     self.player_speed -= 7
                 if event.key == pygame.K_UP:
                     self.player_speed += 7
-
     
     def run(self):
         """Main game loop."""
