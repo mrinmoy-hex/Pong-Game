@@ -3,6 +3,7 @@ import sys
 import random
 
 # General setup
+pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 clock = pygame.time.Clock()
 
@@ -14,19 +15,28 @@ def ball_animations():
     
     # Making the ball bounce around the border
     if ball.top <= 0 or ball.bottom >= screen_height:
+        pygame.mixer.Sound.play(pong_sound)
         ball_speed_y *= -1
-        
+    
+    # Player Score
     if ball.left <= 0:
+        pygame.mixer.Sound.play(score_sound)
+        
         player_score += 1
         score_time = pygame.time.get_ticks()
-        
+    
+    # Opponent Score    
     if ball.left >= screen_width:
+        pygame.mixer.Sound.play(score_sound)
+        
         opponent_score += 1
         score_time = pygame.time.get_ticks()
         
         
     # Colissions
     if ball.colliderect(player) and ball_speed_x > 0: 
+        pygame.mixer.Sound.play(pong_sound)
+        
         if abs(ball.right - player.left) < 10:
             ball_speed_x *= -1
         elif abs(ball.bottom - player.top) < 10 and ball_speed_y > 0:
@@ -36,6 +46,8 @@ def ball_animations():
         
     
     if ball.colliderect(opponent) and ball_speed_x < 0:
+        pygame.mixer.Sound.play(pong_sound)
+        
         if abs(ball.left - opponent.right) < 10:
             ball_speed_x *= -1
         elif abs(ball.bottom - player.top) < 10 and ball_speed_y > 0:
@@ -115,7 +127,7 @@ light_grey = (200, 200, 200)
 ball_speed_x = 7 * random.choice((1, -1))
 ball_speed_y = 7 * random.choice((1, -1))
 player_speed = 0
-opponent_speed = 8
+opponent_speed = 7
 
 # Text variables
 player_score = 0
@@ -124,6 +136,10 @@ game_font = pygame.font.Font("freesansbold.ttf", 32)
 
 # Score Timer
 score_time = True
+
+# Sound
+pong_sound = pygame.mixer.Sound("media/pong.ogg")
+score_sound = pygame.mixer.Sound("media/score.ogg")
 
 while True:
     # Handling input
